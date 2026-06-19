@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>项目</title>
+  <meta name="description" content="项目列表" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div>
+        <h1 id="site-title">项目</h1>
+        <div class="subtitle" id="site-subtitle"></div>
+      </div>
+      <div class="masthead-meta" id="list-meta"></div>
+    </header>
+
+    <div class="controls">
+      <div class="search-line">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="搜索项目名称、简介或标签…"
+          autocomplete="off"
+        />
+      </div>
+      <div class="tag-row" id="tag-row"></div>
+    </div>
+
+    <div class="list-head" aria-hidden="true">
+      <span>项目</span>
+      <span>简介</span>
+      <span>标签</span>
+      <span>更新</span>
+    </div>
+
+    <ul class="list" id="project-list"></ul>
+
+    <footer class="footer">
+      <span>zbnw.github.io © 2026.6.20 - <span id="year"></span></span>
+      <span><a href="https://github.com/zbnw" target="_blank" rel="noopener noreferrer">GitHub</a></span>
+    </footer>
+  </div>
+
+  <script src="./projects.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
