@@ -38,5 +38,11 @@ const SITE = {
 };
 
 const PROJECTS = [
-
+  {
+    name: "Time Encrypt",
+    desc: "一刻钟内有效的无状态临时密文工具",
+    tags: ["加密", "工具", "开源"],
+    url: "./timenc/",
+    date: "2026-07",
+  },
 ];
