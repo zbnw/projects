@@ -95,6 +95,10 @@ a { color: inherit; }
 .project-card > a:hover::after { transform: scale(1.12); }
 .project-card > a:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 .card-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.card-meta { display: flex; align-items: center; gap: 10px; }
+.origin-badge { padding: 4px 7px; border-radius: 6px; font: 700 9px var(--font-mono); letter-spacing: .08em; }
+.origin-badge.original { background: var(--acid); color: var(--forest); }
+.origin-badge.repost { background: rgba(235,97,53,.11); color: #bd3e1c; }
 .card-index { color: var(--orange); font: 10px var(--font-mono); letter-spacing: .1em; }
 .card-date { color: var(--faint); font: 10px var(--font-mono); }
 .project-card h3 { margin: 53px 0 10px; font-size: 27px; line-height: 1.15; letter-spacing: -.04em; font-weight: 620; }
@@ -105,6 +109,20 @@ a { color: inherit; }
 .card-arrow { width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center; border-radius: 50%; background: var(--forest); color: var(--acid); transition: transform .2s ease; }
 .card-arrow svg { width: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; }
 .project-card > a:hover .card-arrow { transform: rotate(8deg); }
+
+/* 原创项目固定置顶并使用主视觉色；转载项目使用浅色编辑卡片。 */
+.project-card.is-original { grid-column: 1 / -1; }
+.project-card.is-original > a { min-height: 330px; border-color: transparent; background: var(--forest); color: #f8f5eb; }
+.project-card.is-original > a::after { width: 260px; height: 260px; right: -105px; bottom: -155px; border-width: 38px; border-color: rgba(223,255,116,.075); }
+.project-card.is-original > a:hover { border-color: rgba(223,255,116,.32); background: var(--forest-light); box-shadow: 0 22px 48px rgba(24,55,44,.18); }
+.project-card.is-original .card-index { color: rgba(248,245,235,.48); }
+.project-card.is-original .card-date { color: rgba(248,245,235,.46); }
+.project-card.is-original h3 { color: var(--acid); font-size: 34px; }
+.project-card.is-original .card-desc { color: rgba(248,245,235,.66); }
+.project-card.is-original .card-tag { background: rgba(255,255,255,.08); color: rgba(248,245,235,.72); }
+.project-card.is-original .card-arrow { background: var(--acid); color: var(--forest); }
+.project-card.is-repost > a { border-top-color: rgba(235,97,53,.26); }
+.project-card.is-repost > a:hover { border-color: rgba(235,97,53,.34); }
 .empty-state { grid-column: 1 / -1; min-height: 260px; padding: 64px 24px; border: 1px dashed var(--line-strong); border-radius: var(--radius-md); display: grid; place-items: center; text-align: center; }
 .empty-state strong { display: block; font-size: 18px; }
 .empty-state span { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; }

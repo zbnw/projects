@@ -21,6 +21,11 @@
     return /^https?:\/\//i.test(url);
   }
 
+  // “转载”是来源标记，也是排序依据。原创项目始终排在转载项目之前。
+  function isRepost(project) {
+    return (project.tags || []).indexOf("转载") !== -1;
+  }
+
   function getAllTags() {
     var tags = [];
     PROJECTS.forEach(function (project) {
@@ -73,8 +78,11 @@
 
   function renderList() {
     var list = document.getElementById("project-list");
-    var filtered = PROJECTS.filter(matches);
-    document.getElementById("result-meta").textContent = "SHOWING " + filtered.length + " / " + PROJECTS.length;
+    var filtered = PROJECTS.filter(matches).sort(function (a, b) {
+      return Number(isRepost(a)) - Number(isRepost(b));
+    });
+    var originalCount = filtered.filter(function (project) { return !isRepost(project); }).length;
+    document.getElementById("result-meta").textContent = "SHOWING " + filtered.length + " / " + PROJECTS.length + " · ORIGINAL " + originalCount;
 
     if (!filtered.length) {
       list.innerHTML = '<li class="empty-state"><div><strong>没有找到匹配的项目</strong><span>换个关键词，或者清除当前筛选。</span><button type="button" id="reset-filter">清除筛选</button></div></li>';
@@ -83,15 +91,16 @@
     }
 
     list.innerHTML = filtered.map(function (project, index) {
+      var repost = isRepost(project);
       var tags = (project.tags || []).map(function (tag) {
         return '<span class="card-tag">' + escapeHtml(tag) + "</span>";
       }).join("");
       var external = isExternal(project.url);
       var label = project.name + (project.desc ? "，" + project.desc : "");
       return (
-        '<li class="project-card" style="--delay:' + Math.min(index * 55, 275) + 'ms">' +
+        '<li class="project-card ' + (repost ? "is-repost" : "is-original") + '" style="--delay:' + Math.min(index * 55, 275) + 'ms">' +
           '<a href="' + escapeHtml(project.url) + '" aria-label="' + escapeHtml(label) + '"' + (external ? ' target="_blank" rel="noopener noreferrer"' : "") + ">" +
-            '<div class="card-top"><span class="card-index">PROJECT / ' + String(index + 1).padStart(2, "0") + '</span><span class="card-date">' + escapeHtml(project.date || "ONGOING") + "</span></div>" +
+            '<div class="card-top"><div class="card-meta"><span class="origin-badge ' + (repost ? "repost" : "original") + '">' + (repost ? "转载" : "原创") + '</span><span class="card-index">PROJECT / ' + String(index + 1).padStart(2, "0") + '</span></div><span class="card-date">' + escapeHtml(project.date || "ONGOING") + "</span></div>" +
             "<h3>" + escapeHtml(project.name) + "</h3>" +
             '<p class="card-desc">' + escapeHtml(project.desc || "暂无简介") + "</p>" +
             '<div class="card-bottom"><div class="card-tags">' + tags + '</div><span class="card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></span></div>' +
