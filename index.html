@@ -1,48 +1,77 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>项目</title>
-  <meta name="description" content="项目列表" />
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#18372c">
+  <meta name="description" content="Beining 的独立项目与实验作品集。">
+  <meta name="robots" content="index,follow">
+  <title>Beining 的项目集</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <div class="wrap">
-    <header class="masthead">
-      <div>
-        <h1 id="site-title">项目</h1>
-        <div class="subtitle" id="site-subtitle"></div>
-      </div>
-      <div class="masthead-meta" id="list-meta"></div>
-    </header>
-
-    <div class="controls">
-      <div class="search-line">
-        <input
-          type="text"
-          id="search-input"
-          placeholder="搜索项目名称、简介或标签…"
-          autocomplete="off"
-        />
-      </div>
-      <div class="tag-row" id="tag-row"></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="./" aria-label="返回项目首页">
+        <span class="wordmark-mark" aria-hidden="true">B</span>
+        <span class="wordmark-text">Beining <i>/</i> Projects</span>
+      </a>
+      <nav class="site-nav" aria-label="站点导航">
+        <a href="https://zbnw.qzz.io">主页</a>
+        <a href="https://github.com/zbnw" target="_blank" rel="noopener noreferrer">
+          GitHub
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+        </a>
+      </nav>
     </div>
+  </header>
 
-    <div class="list-head" aria-hidden="true">
-      <span>项目</span>
-      <span>简介</span>
-      <span>标签</span>
-      <span>更新</span>
+  <main class="page-shell">
+    <section class="hero" aria-labelledby="site-title">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span>INDEPENDENT DIGITAL GARDEN</p>
+        <h1 id="site-title">Beining 的项目集</h1>
+        <h2>把想法，做成<br><em>可以使用的东西。</em></h2>
+        <p class="hero-description" id="site-subtitle">收录一些我的小项目，大多数依靠人工智能完成，偶尔更新，也会收录一些国内外的有趣项目。</p>
+      </div>
+      <div class="hero-stats" aria-label="项目统计">
+        <div><strong id="project-count">0</strong><span>PROJECTS</span></div>
+        <div><strong id="tag-count">0</strong><span>TOPICS</span></div>
+        <div><strong id="latest-date">—</strong><span>UPDATED</span></div>
+      </div>
+    </section>
+
+    <section class="directory" aria-labelledby="directory-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-index">01 / DIRECTORY</p>
+          <h2 id="directory-title">项目目录</h2>
+        </div>
+        <p id="result-meta" aria-live="polite"></p>
+      </div>
+
+      <div class="toolbar">
+        <label class="search-box" for="search-input">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+          <input id="search-input" type="search" placeholder="搜索名称、简介或标签" autocomplete="off">
+          <kbd>/</kbd>
+          <button id="clear-search" class="clear-search" type="button" aria-label="清空搜索" hidden>清除</button>
+        </label>
+        <div class="tag-row" id="tag-row" aria-label="按标签筛选"></div>
+      </div>
+
+      <ul class="project-grid" id="project-list"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <span>© 2026–<span id="year"></span> Beining</span>
+      <span>Made with curiosity and careful iteration.</span>
     </div>
-
-    <ul class="list" id="project-list"></ul>
-
-    <footer class="footer">
-      <span>zbnw.github.io © 2026.6.20 - <span id="year"></span></span>
-      <span><a href="https://github.com/zbnw" target="_blank" rel="noopener noreferrer">GitHub</a></span>
-    </footer>
-  </div>
+    <a href="#">回到顶部 ↑</a>
+  </footer>
 
   <script src="./projects.js"></script>
   <script src="./app.js"></script>
