@@ -8,13 +8,15 @@
   <meta name="description" content="Time Encrypt 是一个无服务端存储的一刻钟临时密文前端原型。固定 129 位密文，15 分钟本机时间验证。">
   <meta name="robots" content="index,follow">
   <meta name="referrer" content="no-referrer">
+  <!-- 阻止托管/CDN 注入的第三方脚本与遥测请求；项目资源全部来自当前目录。 -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'">
   <link rel="canonical" href="https://zbnw.qzz.io/projects/timenc/">
   <meta property="og:title" content="Time Encrypt · 一刻钟临时密文">
   <meta property="og:description" content="固定 129 位、15 分钟验证、所有计算仅在浏览器本地完成。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://zbnw.qzz.io/projects/timenc/">
   <title>Time Encrypt · 一刻钟临时密文</title>
-  <link rel="stylesheet" href="styles.css?v=3.0.0">
+  <link rel="stylesheet" href="styles.css?v=3.0.1">
 </head>
 <body id="top">
   <a class="skip-link" href="#cipherForm">跳到加密工具</a>
@@ -190,8 +192,8 @@
     </section>
   </main>
 
-  <script src="crypto-core.mjs?v=3.0.0"></script>
-  <script src="app.js?v=3.0.0"></script>
+  <script src="crypto-core.mjs?v=3.0.1"></script>
+  <script src="app.js?v=3.0.1"></script>
 </body>
 </html>
 
