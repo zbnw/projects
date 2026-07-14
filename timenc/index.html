@@ -4,20 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#0b0d0c">
-  <meta name="description" content="Time Encrypt 是一个无服务端存储的一刻钟临时密文前端原型。">
+  <meta name="theme-color" content="#08100d">
+  <meta name="description" content="Time Encrypt 是一个无服务端存储的一刻钟临时密文前端原型。固定 129 位密文，15 分钟本机时间验证。">
   <meta name="robots" content="index,follow">
+  <meta name="referrer" content="no-referrer">
   <link rel="canonical" href="https://zbnw.qzz.io/projects/timenc/">
   <meta property="og:title" content="Time Encrypt · 一刻钟临时密文">
-  <meta property="og:description" content="固定格式、15 分钟有效、完全在浏览器本地运行。">
+  <meta property="og:description" content="固定 129 位、15 分钟验证、所有计算仅在浏览器本地完成。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://zbnw.qzz.io/projects/timenc/">
-  <title>Time Encrypt · 分钟级临时密文</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Time Encrypt · 一刻钟临时密文</title>
+  <link rel="stylesheet" href="styles.css?v=3.0.0">
 </head>
-<body>
+<body id="top">
+  <a class="skip-link" href="#cipherForm">跳到加密工具</a>
+
   <header class="topbar">
-    <a class="brand" href="#" aria-label="Time Encrypt 首页">
+    <a class="brand" href="#top" aria-label="Time Encrypt 页面顶部">
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M12 2 4.5 5v5.5c0 5 3.2 9.5 7.5 11.5 4.3-2 7.5-6.5 7.5-11.5V5L12 2Zm0 4.1 3.5 1.4v3c0 3-1.4 5.7-3.5 7.2-2.1-1.5-3.5-4.2-3.5-7.2v-3L12 6.1Z"/></svg>
       </span>
@@ -30,116 +33,151 @@
   </header>
 
   <main>
-    <section class="hero">
-      <div class="eyebrow"><span></span>15 MINUTE CIPHER</div>
-      <h1>只在一刻钟内有效的<br><em>临时密文</em></h1>
-      <p>密钥随分钟变化。密文发出后 15 分钟内可解，过期后自动失效；所有计算仅发生在当前浏览器。</p>
-      <div class="time-card">
-        <div>
-          <small>当前时间窗口</small>
-          <strong id="currentTime">--:--:--</strong>
-        </div>
-        <div class="time-progress"><i id="minuteProgress"></i></div>
-        <span id="windowLabel">正在同步</span>
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <div class="eyebrow"><span aria-hidden="true"></span>15 MINUTE CIPHER · PROTOCOL V3</div>
+        <h1 id="heroTitle">把短消息变成<br><em>一刻钟密文</em></h1>
+        <p>输入共享口令，在浏览器本地生成固定 129 位密文。接收方使用相同口令，并在签发后 15 分钟内完成验证。</p>
+        <ul class="trust-list" aria-label="产品特点">
+          <li><i aria-hidden="true"></i>零上传</li>
+          <li><i aria-hidden="true"></i>零存储</li>
+          <li><i aria-hidden="true"></i>零依赖</li>
+        </ul>
       </div>
+
+      <aside class="clock-card" aria-label="本机时间窗口">
+        <div class="clock-head">
+          <span>LOCAL CLOCK</span>
+          <span class="local-badge">本机</span>
+        </div>
+        <strong id="currentTime">--:--:--</strong>
+        <span class="current-date" id="currentDate">正在读取时间</span>
+        <div class="time-progress" aria-hidden="true"><i id="minuteProgress"></i></div>
+        <span class="window-label" id="windowLabel">正在计算分钟窗口</span>
+        <p>用于密钥窗口匹配，不代表服务器同步；修改设备时间会影响纯前端验证。</p>
+      </aside>
     </section>
 
-    <section class="workspace" aria-label="加密解密工具">
-      <div class="tabs" role="tablist">
-        <button class="tab active" id="encryptTab" role="tab" aria-selected="true" data-mode="encrypt">
-          <svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3h1a2 2 0 0 1 2 2v8H4v-8a2 2 0 0 1 2-2h1Zm3 0h4V7a2 2 0 1 0-4 0v3Z"/></svg>
+    <section class="workspace" aria-labelledby="toolTitle">
+      <div class="section-kicker"><span>LOCAL WORKSPACE</span><b>所有数据仅在此页面内存中处理</b></div>
+      <h2 class="visually-hidden" id="toolTitle">加密与解密工具</h2>
+
+      <div class="tabs" role="tablist" aria-label="选择操作模式">
+        <button class="tab active" id="encryptTab" type="button" role="tab" aria-selected="true" aria-controls="cipherPanel" tabindex="0" data-mode="encrypt">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3h1a2 2 0 0 1 2 2v8H4v-8a2 2 0 0 1 2-2h1Zm3 0h4V7a2 2 0 1 0-4 0v3Z"/></svg>
           生成密文
         </button>
-        <button class="tab" id="decryptTab" role="tab" aria-selected="false" data-mode="decrypt">
-          <svg viewBox="0 0 24 24"><path d="M17 8h-7V7a2 2 0 1 1 3.7 1h3.2A5 5 0 1 0 7 7v3H6a2 2 0 0 0-2 2v8h16v-8a2 2 0 0 0-2-2h-1V8Z"/></svg>
+        <button class="tab" id="decryptTab" type="button" role="tab" aria-selected="false" aria-controls="cipherPanel" tabindex="-1" data-mode="decrypt">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 8h-7V7a2 2 0 1 1 3.7 1h3.2A5 5 0 1 0 7 7v3H6a2 2 0 0 0-2 2v8h16v-8a2 2 0 0 0-2-2h-1V8Z"/></svg>
           解开密文
         </button>
       </div>
 
-      <div class="panel">
+      <div class="panel" id="cipherPanel" role="tabpanel" aria-labelledby="encryptTab" aria-busy="false">
         <div class="notice" id="securityNotice">
-          <svg viewBox="0 0 24 24"><path d="M12 2 3 6v6c0 5 3.8 9.7 9 11 5.2-1.3 9-6 9-11V6l-9-4Zm1 15h-2v-2h2v2Zm0-4h-2V7h2v6Z"/></svg>
-          <p><strong>前端原型</strong><br>算法与口令都在浏览器中运行，适合功能验证，不应直接用于生产敏感数据。</p>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 6v6c0 5 3.8 9.7 9 11 5.2-1.3 9-6 9-11V6l-9-4Zm1 15h-2v-2h2v2Zm0-4h-2V7h2v6Z"/></svg>
+          <p><strong>前端安全边界</strong><br>口令不会上传或保存，但本机代码与时间都可被修改。请勿把本原型用于生产环境中的高敏感数据。</p>
         </div>
 
-        <form id="cipherForm" novalidate>
-          <label class="field-label" for="secretInput">共享口令</label>
+        <form id="cipherForm" autocomplete="off" novalidate>
+          <div class="field-head">
+            <label class="field-label" for="secretInput">共享口令</label>
+            <span id="secretMeta">至少 8 字符 · 建议 16+ 随机字符</span>
+          </div>
           <div class="input-shell">
-            <svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H5v14h14V9h-2V6a5 5 0 0 0-5-5Zm-2 5a2 2 0 1 1 4 0v3h-4V6Zm3 11.7V20h-2v-2.3a2 2 0 1 1 2 0Z"/></svg>
-            <input id="secretInput" type="password" autocomplete="off" placeholder="双方约定的口令，至少 8 位" minlength="8">
-            <button class="icon-button" id="toggleSecret" type="button" aria-label="显示口令">
-              <svg viewBox="0 0 24 24"><path d="M12 5c5.5 0 9.5 5.5 9.5 7s-4 7-9.5 7S2.5 13.5 2.5 12 6.5 5 12 5Zm0 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v3H5v14h14V9h-2V6a5 5 0 0 0-5-5Zm-2 5a2 2 0 1 1 4 0v3h-4V6Zm3 11.7V20h-2v-2.3a2 2 0 1 1 2 0Z"/></svg>
+            <input id="secretInput" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="双方预先约定的共享口令" minlength="8" maxlength="256" aria-describedby="secretMeta" required>
+            <button class="icon-button" id="toggleSecret" type="button" aria-label="显示口令" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c5.5 0 9.5 5.5 9.5 7s-4 7-9.5 7S2.5 13.5 2.5 12 6.5 5 12 5Zm0 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"/></svg>
             </button>
           </div>
 
           <div id="encryptFields">
-            <div class="label-row">
+            <div class="field-head">
               <label class="field-label" for="plainInput">要加密的内容</label>
               <span id="byteCount">0 / 43 字节</span>
             </div>
-            <textarea id="plainInput" rows="4" placeholder="输入短消息、验证码或临时指令…"></textarea>
+            <textarea id="plainInput" rows="4" placeholder="输入短消息、验证码或临时指令…" aria-describedby="byteCount" aria-invalid="false"></textarea>
           </div>
 
           <div id="decryptFields" hidden>
-            <label class="field-label" for="tokenInput">收到的密文</label>
-            <textarea id="tokenInput" class="token-input" rows="5" spellcheck="false" placeholder="粘贴 26 组固定长度密文…"></textarea>
+            <div class="field-head">
+              <label class="field-label" for="tokenInput">收到的密文</label>
+              <span id="tokenCount">0 / 104 字符</span>
+            </div>
+            <textarea id="tokenInput" class="token-input" rows="5" spellcheck="false" autocapitalize="none" autocorrect="off" inputmode="text" maxlength="160" placeholder="粘贴 26 组 × 4 位的完整密文…" aria-describedby="tokenCount" aria-invalid="false"></textarea>
           </div>
 
-          <button class="primary-button" id="submitButton" type="submit">
-            <span id="buttonText">生成一刻钟密文</span>
-            <svg viewBox="0 0 24 24"><path d="m13 5 7 7-7 7v-4H4v-6h9V5Z"/></svg>
-          </button>
-          <p class="error" id="errorMessage" role="alert"></p>
+          <div class="action-row">
+            <button class="primary-button" id="submitButton" type="submit">
+              <span id="buttonText">生成一刻钟密文</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 5 7 7-7 7v-4H4v-6h9V5Z"/></svg>
+            </button>
+            <button class="clear-button" id="clearButton" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5"/></svg>
+              清空
+            </button>
+          </div>
+          <p class="error" id="errorMessage" role="alert" aria-live="assertive"></p>
+          <p class="visually-hidden" id="statusMessage" role="status" aria-live="polite"></p>
         </form>
 
-        <div class="result" id="resultBox" hidden>
+        <div class="result" id="resultBox" role="status" aria-live="polite" tabindex="-1" hidden>
           <div class="result-head">
-            <span><i></i><b id="resultTitle">密文已生成</b></span>
-            <span id="expiryBadge">14:59 后失效</span>
+            <span><i aria-hidden="true"></i><b id="resultTitle">密文已生成</b></span>
+            <span id="expiryBadge">15:00 后停止验证</span>
           </div>
-          <pre id="resultText"></pre>
+          <pre id="resultText" tabindex="0" aria-label="操作结果"></pre>
+          <div class="result-meta">
+            <span id="issuedAtTime">签发 --:--:--</span>
+            <span id="protocolBadge">协议 v3</span>
+          </div>
           <button class="copy-button" id="copyButton" type="button">
-            <svg viewBox="0 0 24 24"><path d="M8 7V3h13v14h-4v4H3V7h5Zm2 0h7v8h2V5h-9v2Zm-5 2v10h10V9H5Z"/></svg>
-            <span>复制结果</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7V3h13v14h-4v4H3V7h5Zm2 0h7v8h2V5h-9v2Zm-5 2v10h10V9H5Z"/></svg>
+            <span id="copyButtonText">复制结果</span>
           </button>
         </div>
       </div>
     </section>
 
-    <section class="features">
-      <article><span>01</span><div><h3>分钟派生密钥</h3><p>共享口令与当前分钟共同派生一次性加密密钥。</p></div></article>
-      <article><span>02</span><div><h3>固定密文格式</h3><p>固定 26 组，每组 4 位，仅使用大小写字母与数字。</p></div></article>
-      <article><span>03</span><div><h3>无状态验证</h3><p>签发时间封装在密文内，无需服务器保存记录。</p></div></article>
+    <section class="features" aria-labelledby="featuresTitle">
+      <h2 class="visually-hidden" id="featuresTitle">核心特点</h2>
+      <article><span>01</span><div><h3>每条密文独立派生</h3><p>随机 IV 参与口令派生，降低同一口令跨密文复用带来的批量猜测风险。</p></div></article>
+      <article><span>02</span><div><h3>固定 129 位外观</h3><p>26 组、每组 4 位；正文只使用大小写字母和数字，便于复制传递。</p></div></article>
+      <article><span>03</span><div><h3>认证后再判断时间</h3><p>签发时间受 AES-GCM 保护，达到 900 秒后当前客户端停止验证。</p></div></article>
     </section>
 
-    <!-- 面向使用者和二次开发者的算法公开说明 -->
     <section class="project-notes" id="algorithm-notes" aria-labelledby="notesTitle">
       <div class="notes-heading">
-        <span>DOCUMENTATION</span>
-        <h2 id="notesTitle">算法说明</h2>
-        <p>这里是预留给项目维护者的说明区域，可用于补充设计目的、使用场景或注意事项。</p>
+        <span>OPEN PROTOCOL</span>
+        <h2 id="notesTitle">算法与边界</h2>
+        <p>实现完全公开，页面不依赖“隐藏算法”获得安全性。下面是当前 v3 协议的核心过程与使用边界。</p>
       </div>
 
       <div class="note-content">
-        <span class="note-index">HOW IT WORKS / 01</span>
-        <h3>公开算法，保密密钥</h3>
-        <p>Time Encrypt 不依赖隐藏算法。共享口令先派生主密钥，再结合 Unix 分钟编号生成当前分钟的 AES-256-GCM 密钥。签发时间与明文一起被认证加密，因此攻击者不能在不破坏认证标签的情况下修改时间。</p>
+        <span class="note-index">HOW IT WORKS / V3</span>
+        <h3>公开算法，保密口令</h3>
+        <p>共享口令先通过 PBKDF2-SHA256 派生主密钥，再由 HKDF-SHA256 隔离为分钟密钥。随机 IV、协议版本和固定域参与派生或认证；签发时间与明文共同接受 AES-256-GCM 保护。</p>
 
         <ol class="note-steps">
-          <li><b>派生</b><span>PBKDF2 提高猜口令成本，HKDF 将主密钥隔离成每分钟独立密钥。</span></li>
-          <li><b>封装</b><span>签发时间、明文和随机填充组成固定 48 字节数据帧。</span></li>
-          <li><b>加密</b><span>AES-256-GCM 同时提供机密性与完整性，每条消息使用随机 IV。</span></li>
-          <li><b>过期</b><span>解密成功后检查受保护的签发时间，达到 900 秒立即拒绝。</span></li>
+          <li><b>派生</b><span>PBKDF2 迭代 600,000 次，并使用每条密文的随机 IV 构成独立盐。</span></li>
+          <li><b>隔离</b><span>Unix 分钟编号经 HKDF 派生对应窗口的 AES-256 密钥。</span></li>
+          <li><b>封装</b><span>签发时间、明文与随机填充组成固定 48 字节数据帧，隐藏明文长度。</span></li>
+          <li><b>验证</b><span>AES-GCM 认证通过后检查签发时间；第 900 秒立即拒绝。</span></li>
         </ol>
+
+        <div class="boundary-note">
+          <span>IMPORTANT</span>
+          <p>“一刻钟有效”是验证规则，不是远程销毁。接收方可以保存已解密内容，用户也可修改本机时间。生产系统应把主密钥和可信时间放到后端。</p>
+        </div>
 
         <div class="developer-note">
           <span>FOR DEVELOPERS</span>
-          <p>你可以 Fork 本项目并修改有效期、数据帧长度、品牌和界面。密码参数集中在 <code>crypto-core.mjs</code> 顶部；修改协议后应同时更换版本号/派生域字符串，并保留旧版本兼容逻辑。详细步骤见 README 的“二次开发指南”。</p>
+          <p>你可以 Fork 并修改品牌、有效期、数据帧或界面。协议参数集中在 <code>crypto-core.mjs</code> 顶部；任何派生或帧格式改动都应增加版本号、替换版本域并补齐边界测试。完整方法见 README。</p>
         </div>
       </div>
     </section>
 
-    <!-- 作者留言：请修改 blockquote 和 author-signature 中的文字 -->
     <section class="author-message" aria-labelledby="authorMessageTitle">
       <div class="author-label">
         <span>AUTHOR MESSAGE</span>
@@ -151,7 +189,9 @@
       </div>
     </section>
   </main>
-  <script src="crypto-core.mjs"></script>
-  <script src="app.js"></script>
+
+  <script src="crypto-core.mjs?v=3.0.0"></script>
+  <script src="app.js?v=3.0.0"></script>
 </body>
 </html>
+
